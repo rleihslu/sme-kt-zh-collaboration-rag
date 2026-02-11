@@ -1,6 +1,6 @@
 name: sme-kt-zh-collaboration-rag
 dependencies:
-  - python~=3.10.14
+  - python~=3.13.7
   - pip
   - pip:
-    - -r requirements.txt
+    - -r backend/requirements.txt
