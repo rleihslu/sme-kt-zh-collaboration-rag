@@ -1,6 +1,6 @@
 import re
 
-from sme_kt_zh_collaboration_rag import __version__
+from backend.src.sme_kt_zh_collaboration_rag import __version__
 
 
 SEMVER_REGEX = re.compile(
