@@ -1,4 +1,3 @@
-
 import os
 import asyncio
 from collections.abc import AsyncGenerator
@@ -6,13 +5,15 @@ from collections.abc import AsyncGenerator
 from loguru import logger
 from openai import AsyncOpenAI
 
-from conversational_toolkit.llms.base import LLM, LLMMessage, Roles # type: ignore[import-untyped]
-from conversational_toolkit.agents.rag import RAG # type: ignore[import-untyped]
-from conversational_toolkit.agents.base import Agent, QueryWithContext # type: ignore[import-untyped]
-from conversational_toolkit.vectorstores.chromadb import ChromaDBVectorStore # type: ignore[import-untyped]
-from conversational_toolkit.chunking.base import Chunk # type: ignore[import-untyped]
-from conversational_toolkit.embeddings.sentence_transformer import SentenceTransformerEmbeddings # type: ignore[import-untyped]
-from conversational_toolkit.retriever.vectorstore_retriever import VectorStoreRetriever # type: ignore[import-untyped]
+from conversational_toolkit.llms.base import LLM, LLMMessage, Roles  # type: ignore[import-untyped]
+from conversational_toolkit.agents.rag import RAG  # type: ignore[import-untyped]
+from conversational_toolkit.agents.base import QueryWithContext  # type: ignore[import-untyped]
+from conversational_toolkit.vectorstores.chromadb import ChromaDBVectorStore  # type: ignore[import-untyped]
+from conversational_toolkit.chunking.base import Chunk  # type: ignore[import-untyped]
+from conversational_toolkit.embeddings.sentence_transformer import (
+    SentenceTransformerEmbeddings,
+)  # type: ignore[import-untyped]
+from conversational_toolkit.retriever.vectorstore_retriever import VectorStoreRetriever  # type: ignore[import-untyped]
 
 
 def get_docs() -> list[str]:
@@ -20,11 +21,11 @@ def get_docs() -> list[str]:
         "The KT-ZH SDSC prototyping workshop will kick off on the 23rd of February.",
         "Skiing is the best part about winter.",
         "We will go skiing in Klosters, it will be a lot of fun.",
-        "Viktoria is the youngest in the innovation team of SDSC in Zurich."
+        "Viktoria is the youngest in the innovation team of SDSC in Zurich.",
     ]
 
 
-def create_chunks(documents: list[str]) ->list[Chunk]:
+def create_chunks(documents: list[str]) -> list[Chunk]:
     chunks: list[Chunk] = []
 
     for i, doc in enumerate(documents):
@@ -35,13 +36,12 @@ def create_chunks(documents: list[str]) ->list[Chunk]:
             metadata={},
         )
         chunks.append(chunk)
-    
+
     return chunks
 
 
 async def create_chromadb(
-        chunks: list[Chunk], 
-        embedding_model: SentenceTransformerEmbeddings
+    chunks: list[Chunk], embedding_model: SentenceTransformerEmbeddings
 ) -> ChromaDBVectorStore:
     vector_store = ChromaDBVectorStore(db_path="backend/data_vs.db")
     embeddings = await embedding_model.get_embeddings([c.content for c in chunks])
@@ -53,22 +53,21 @@ async def create_chromadb(
 
 
 async def test_vector_store(
-        test_string: str, 
-        vector_store: ChromaDBVectorStore, 
-        embedding_model: SentenceTransformerEmbeddings,
-        top_k: int = 1, 
+    test_string: str,
+    vector_store: ChromaDBVectorStore,
+    embedding_model: SentenceTransformerEmbeddings,
+    top_k: int = 1,
 ) -> None:
-    vsr = VectorStoreRetriever( # alternatively can use BM25Retriever (not implemented yet) or create another retriever, hierarchical retrieval # TODO which ones
-        embedding_model=embedding_model, 
-        vector_store=vector_store, 
+    vsr = VectorStoreRetriever(  # alternatively can use BM25Retriever (not implemented yet) or create another retriever, hierarchical retrieval # TODO which ones
+        embedding_model=embedding_model,
+        vector_store=vector_store,
         top_k=top_k,
     )
-    results = await vsr.retrieve(test_string) 
+    results = await vsr.retrieve(test_string)
     print(f"Top {top_k} matches: ")
-    for result in results: 
+    for result in results:
         match = result.content
         print(match)
-
 
 
 class LocalLLM(LLM):
@@ -84,7 +83,9 @@ class LocalLLM(LLM):
         self.model = model_name
         self.temperature = temperature
         self.seed = seed
-        logger.debug(f"Local LLM loaded: {model_name}; temperature: {temperature}; seed: {seed}")
+        logger.debug(
+            f"Local LLM loaded: {model_name}; temperature: {temperature}; seed: {seed}"
+        )
 
     async def generate(self, conversation: list[LLMMessage]) -> LLMMessage:
         """
@@ -114,17 +115,19 @@ class LocalLLM(LLM):
             tool_calls=completion.choices[0].message.tool_calls,  # type: ignore
         )
 
-    async def generate_stream(self, conversation: list[LLMMessage]) -> AsyncGenerator[LLMMessage, None]:
+    async def generate_stream(
+        self, conversation: list[LLMMessage]
+    ) -> AsyncGenerator[LLMMessage, None]:
         # Gateway doesn't support streaming: do one normal completion, then yield once.
         msg = await self.generate(conversation)
         yield msg
 
 
 async def create_rag(
-        embedding_model_name: str,
-        top_k: int,
-        temperature: float = 0.5,
-        seed: int = 42,
+    embedding_model_name: str,
+    top_k: int,
+    temperature: float = 0.5,
+    seed: int = 42,
 ):
     embedding_model = SentenceTransformerEmbeddings(model_name=embedding_model_name)
     documents = get_docs()
@@ -134,10 +137,10 @@ async def create_rag(
         chunks=chunks,
         embedding_model=embedding_model,
     )
-    
+
     await test_vector_store(
         test_string="davos",
-        vector_store=vector_store, 
+        vector_store=vector_store,
         embedding_model=embedding_model,
         top_k=top_k,
     )
@@ -154,25 +157,27 @@ async def create_rag(
         llm=internal_qwen,
         utility_llm=internal_qwen,
         system_prompt="You are a helpful AI assistant specialized in answering question.",
-        description="", # rag description, no functionality
+        description="",  # rag description, no functionality
         retrievers=[VectorStoreRetriever(embedding_model, vector_store, 1)],
-        number_query_expansion=0, # optionally expand query into this many queries related to the initial query (in english) # TODO what is this for?
+        number_query_expansion=0,  # optionally expand query into this many queries related to the initial query (in english) # TODO what is this for?
     )
 
     # preprocess query and then retriev
-    response = await agent.answer( 
+    response = await agent.answer(
         QueryWithContext(
             query="Who is the youngest at SDSC in Zurich?",
-            history=[], # optional, if len(history) > 0 then the query will be reformulated to be standalone/independent of history
+            history=[],  # optional, if len(history) > 0 then the query will be reformulated to be standalone/independent of history
         )
     )
-    
+
     print("RAG response: ", response.content)
     print("RAG sources: ", response.sources)
 
 
 if __name__ == "__main__":
-    asyncio.run(create_rag(
-        embedding_model_name="sentence-transformers/all-MiniLM-L6-v2",
-        top_k=1,
-    ))
+    asyncio.run(
+        create_rag(
+            embedding_model_name="sentence-transformers/all-MiniLM-L6-v2",
+            top_k=1,
+        )
+    )
