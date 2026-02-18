@@ -1,4 +1,5 @@
-# -e backend/
+-e backend/
+-e conversational-toolkit/
 chromadb==1.4.1
 fastapi==0.115.14
 jupyter==1.1.1
@@ -10,5 +11,4 @@ pre-commit==4.2.0
 pytest==8.4.1
 ruff==0.12.3
 sentence-transformers==5.1.1
-# -e conversational-toolkit/
 # git+ssh://git@gipip tlab.datascience.ch/industry/common/conversational-toolkit.git@v7.0.4
