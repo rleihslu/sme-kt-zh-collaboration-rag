@@ -1,5 +1,4 @@
--e backend/
--e conversational-toolkit/
+-e .
 chromadb==1.4.1
 fastapi==0.115.14
 jupyter==1.1.1
