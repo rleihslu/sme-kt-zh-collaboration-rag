@@ -1,3 +1,24 @@
+"""
+Conversational toolkit controller (Facade).
+
+'ConversationalToolkitController' is the single entry point for all application
+logic. It coordinates five pluggable database repositories and an agent to handle
+the full lifecycle of a conversation turn: user registration, conversation and
+thread management, agent invocation, streaming, and persistence of messages,
+sources, and reactions.
+
+The two public entry points for message processing are:
+
+    'process_new_message'        - non-streaming, returns the final 'ClientMessage'.
+    'process_new_message_stream' - async generator that yields partial content
+                                   chunks during generation, then the final
+                                   persisted message with sources.
+
+'ClientMessage' extends 'Message' with the API-response fields ('sources',
+'reaction', 'follow_up_questions') that the frontend needs but that are not
+stored directly on the message record.
+"""
+
 import json
 from collections.abc import AsyncGenerator, Sequence
 from typing import Any

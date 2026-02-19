@@ -1,3 +1,9 @@
+"""
+Embeddings model abstractions.
+
+Concrete implementations: 'OpenAIEmbeddings', 'SentenceTransformerEmbeddings'.
+"""
+
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -6,22 +12,14 @@ from numpy.typing import NDArray
 
 class EmbeddingsModel(ABC):
     """
-    Abstract base class for embeddings models.
+    Abstract base class for text embedding models.
 
     Attributes:
-        model_name (str): The name of the embeddings model.
-        embedding_size (int): The size of the embedding vector.
+        model_name: Identifier of the underlying model.
+        embedding_size: Dimensionality of the returned embedding vectors.
     """
 
     @abstractmethod
     async def get_embeddings(self, texts: str | list[str]) -> NDArray[np.float64]:
-        """
-        Retrieves the embedding for the given text.
-
-        Args:
-            texts (list[str]): The input text for which the embedding needs to be retrieved.
-
-        Returns:
-            np.ndarray: The embedding vector for the input text.
-        """
+        """Embed one or more texts and return a float64 array of shape '(n, embedding_size)'."""
         pass

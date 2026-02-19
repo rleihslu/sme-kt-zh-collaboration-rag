@@ -1,9 +1,20 @@
+"""
+Conversation data model and storage interface.
+
+The 'ConversationDatabase' ABC is the pluggable storage backend for conversation
+records. Concrete implementations ('InMemoryConversationDatabase',
+'PostgreSQLConversationDatabase') are interchangeable at construction time,
+keeping the controller and API layer free of storage-specific code.
+"""
+
 from abc import ABC, abstractmethod
 
 from pydantic import BaseModel
 
 
 class Conversation(BaseModel):
+    """A single conversation session owned by a user."""
+
     id: str
     user_id: str
     create_timestamp: int
@@ -12,6 +23,8 @@ class Conversation(BaseModel):
 
 
 class ConversationDatabase(ABC):
+    """Abstract repository for 'Conversation' records."""
+
     @abstractmethod
     async def create_conversation(self, conversation: Conversation) -> Conversation:
         pass

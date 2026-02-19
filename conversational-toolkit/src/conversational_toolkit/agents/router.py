@@ -1,3 +1,12 @@
+"""
+LLM-based query router that delegates to specialised agents.
+
+'Router' uses the LLM to classify an incoming query against the descriptions of
+all registered agents and then forwards the query to the best-matching one. The
+routing decision is made in a single LLM call that returns JSON with a
+chain-of-thought explanation and a category index.
+"""
+
 import json
 from typing import AsyncGenerator
 
@@ -6,6 +15,15 @@ from conversational_toolkit.llms.base import LLM, LLMMessage, Roles
 
 
 class Router(Agent):
+    """
+    Agent that routes queries to the most appropriate sub-agent.
+
+    The system prompt is built automatically from each registered agent's
+    'description' field. The LLM returns a JSON object with a 'category' index
+    that maps directly to the 'agents' list. Routing happens once per request;
+    after that the selected agent handles the full conversation turn.
+    """
+
     def __init__(self, llm: LLM, agents: list[Agent], description: str = "") -> None:
         self.agents = agents
         self.agent_mapping = {i: agent for i, agent in enumerate(agents)}

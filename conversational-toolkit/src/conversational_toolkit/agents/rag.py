@@ -1,3 +1,13 @@
+"""
+Retrieval-Augmented Generation (RAG) agent.
+
+'RAG' combines document retrieval with language model generation. Before calling
+the LLM it rewrites the query to be history-independent, optionally expands it
+into multiple search queries, retrieves relevant chunks from all configured
+retrievers, merges the ranked results via Reciprocal Rank Fusion, and injects
+the sources into the LLM prompt using XML tags.
+"""
+
 from typing import Any, AsyncGenerator
 
 from conversational_toolkit.agents.base import Agent, AgentAnswer, QueryWithContext
@@ -13,6 +23,19 @@ from conversational_toolkit.vectorstores.base import ChunkRecord
 
 
 class RAG(Agent):
+    """
+    RAG agent that retrieves document chunks before generating an answer.
+
+    Attributes:
+        utility_llm: A (typically cheaper) LLM used for query rewriting and
+            expansion. Kept separate so a fast model can handle preprocessing
+            while a more capable model handles generation.
+        retrievers: One or more retrievers queried in parallel. Their results are
+            merged with Reciprocal Rank Fusion before being passed to the LLM.
+        number_query_expansion: Number of additional search queries to generate
+            from the original query. Set to 0 to disable expansion.
+    """
+
     def __init__(
         self,
         llm: LLM,
