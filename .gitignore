@@ -3,6 +3,9 @@
 .ipynb_checkpoints/
 *.egg-info/
 
+# Virtual environments
+venv/
+
 # IDE settings
 .vscode/
 .idea/
@@ -10,5 +13,20 @@
 # OSX-specific
 .DS_Store
 
-# Others
+# Environment files
+.env.local
+.env.production
+
+# Data / databases
 *.db
+data/
+
+# Runtime artefacts
+logs/
+dist/
+users.json
+sources.json
+conversations.json
+messages.json
+reactions.json
+chunks.db/

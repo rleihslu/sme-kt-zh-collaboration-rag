@@ -55,3 +55,41 @@ Unit tests (using [pytest](https://pytest.org/)) are not executed as a pre-commi
 ```
 pytest
 ```
+
+
+
+
+--
+## Repo structure
+TODO
+
+------
+## Accessing code and contirbuting
+TODO
+
+
+
+
+------
+## Renku
+
+TODO add instructions
+
+
+------
+### Ollama
+
+to use ollama you need to do the following in a terminal in the base directory:
+``
+OLLAMA_MODELS=$RENKU_MOUNT_DIR/ollama_models ollama serve
+``
+
+to see which models you have downloaded, you can do
+``
+ollama list
+``
+
+to download another model, e.g. mistral-nemo:12b you need to run in terminal:
+``
+ollama pull mistral-nemo:12b
+``
