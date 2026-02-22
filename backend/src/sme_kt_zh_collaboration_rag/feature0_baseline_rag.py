@@ -70,8 +70,7 @@ SEED = 42
 MAX_FILES = 5
 
 SYSTEM_PROMPT = (
-    "You are a helpful AI assistant specialised in sustainability and product compliance "
-    "for PrimePack AG.\n\n"
+    "You are a helpful AI assistant specialised in sustainability and product compliance for PrimePack AG.\n\n"
     "You will receive document excerpts relevant to the user's question. "
     "Produce the best possible answer using only the information in those excerpts.\n\n"
     "Rules:\n"
@@ -311,7 +310,8 @@ def build_agent(
     vector_store: ChromaDBVectorStore,
     embedding_model: SentenceTransformerEmbeddings,
     llm: LLM,
-    top_k: int = RETRIEVER_TOP_K,
+    top_k: int,
+    system_prompt: str,
     number_query_expansion: int = 0,
 ) -> RAG:
     """Assemble the RAG agent from a pre-built vector store and LLM.
@@ -325,7 +325,7 @@ def build_agent(
     agent = RAG(
         llm=llm,
         utility_llm=llm,
-        system_prompt=SYSTEM_PROMPT,
+        system_prompt=system_prompt,
         retrievers=[retriever],
         number_query_expansion=number_query_expansion,
     )
@@ -394,7 +394,13 @@ async def run_pipeline(
 
     # Step 4: Build agent
     llm = build_llm(backend, model_name=model_name)
-    agent = build_agent(vector_store, embedding_model, llm, top_k=RETRIEVER_TOP_K)
+    agent = build_agent(
+        vector_store,
+        embedding_model,
+        llm,
+        top_k=RETRIEVER_TOP_K,
+        system_prompt=SYSTEM_PROMPT,
+    )
 
     # Step 5: Generate answer
     answer = await ask(agent, query)
