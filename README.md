@@ -86,10 +86,9 @@ The workshop is structured as six progressive feature tracks, each implemented a
 | Notebook | Topic | What you learn |
 |----------|-------|----------------|
 | `feature0_baseline_rag.ipynb` | **Baseline RAG Pipeline** | The five-stage RAG loop (chunk → embed → store → retrieve → generate), how retrieval inspection works as a debugging tool, and the three main failure modes the workshop addresses. |
-| `feature1_ingestion_chunking.ipynb` | **Document Ingestion & Chunking** | Header-based, fixed-size, and paragraph-aware chunking strategies; the embedding token-limit problem; handling PDF, Markdown, and Excel files; measuring and optimizing retrieval quality through chunking. |
-| `feature2_evaluation.ipynb` | **Evaluation & Validation** | Retrieval metrics (Hit Rate, MRR, Precision@k, Recall@k, NDCG@k); LLM-as-judge scoring for faithfulness and relevance; systematic comparison of retriever configurations using the ground-truth dataset. |
-| `feature3_structured_outputs.ipynb` | **Reliable & Structured Outputs** | Entity-grounding prompts and score-threshold filtering to prevent hallucination; structured JSON outputs with evidence levels (VERIFIED / CLAIMED / MISSING / MIXED); making claim quality machine-readable. |
-| `feature4_query_intelligence.ipynb` | **Query Intelligence** | Six retrieval strategies — baseline, query expansion, HyDE, BM25, hybrid search, and reranking; Reciprocal Rank Fusion (RRF) for merging ranked lists; choosing the right strategy for different query types. |
+| `feature1_evaluation.ipynb` | **Evaluation & Validation** | Retrieval metrics (Hit Rate, MRR, Precision@k, Recall@k, NDCG@k); LLM-as-judge scoring for faithfulness and relevance; systematic comparison of retriever configurations using the ground-truth dataset. |
+| `feature2_structured_outputs.ipynb` | **Reliable & Structured Outputs** | Entity-grounding prompts and score-threshold filtering to prevent hallucination; structured JSON outputs with evidence levels (VERIFIED / CLAIMED / MISSING / MIXED); making claim quality machine-readable. |
+| `feature3_advanced_retrieval_strategies.ipynb` | **Query Intelligence** | Six retrieval strategies: baseline, query expansion, HyDE, BM25, hybrid search, and reranking; Reciprocal Rank Fusion (RRF) for merging ranked lists; choosing the right strategy for different query types. |
 | `feature5_agent_workflows.ipynb` | **Multi-step & Agent Workflows** | When single-shot RAG is insufficient; supplier-comparison with two-step retrieval to avoid bias; systematic evidence audits; gap-aware answering that explicitly flags missing or unverified data. |
 
 Each notebook is self-contained: it imports the `conversational_toolkit` library and runs against the documents in `data/`. You do not need to complete previous notebooks to run a later one, though the concepts build progressively.
@@ -104,8 +103,8 @@ Each notebook is self-contained: it imports the `conversational_toolkit` library
 │   ├── notebooks/             # Workshop notebooks (feature0 – feature5)
 │   └── src/sme_kt_zh_collaboration_rag/
 │       ├── feature0_baseline_rag.py    # Five-step pipeline (chunking → embedding → retrieval → generation)
-│       ├── feature1_ingestion.py
-│       └──
+│       ├── ...
+│       └── ...
 │
 ├── conversational-toolkit/    # Reusable RAG components (toolkit library)
 │   └── src/conversational_toolkit/
