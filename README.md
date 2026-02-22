@@ -18,12 +18,15 @@ The RAG assistant should **cite sources explicitly**, **separate facts from clai
 
 ## Installation
 
+Requires Python version >=3.12
+
 ```bash
 # Create and activate a virtual environment
 python -m venv rag_venv
 source rag_venv/bin/activate  # on Windows: venv\Scripts\activate
 
 # Install requirements
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
@@ -55,6 +58,26 @@ ollama list
 
 # Download a model
 ollama pull mistral-nemo:12b
+```
+
+---
+
+## Running the Notebooks (JupyterLab)
+The workshop notebooks require JupyterLab. Start it from the project root after activating your virtual environment:
+
+```bash
+jupyter lab
+```
+
+JupyterLab opens in your browser at `http://localhost:8888`. Navigate to `backend/notebooks/` in the file browser on the left and open `feature0_baseline_rag.ipynb` to start.
+
+**Running cells:** Use `Shift+Enter` to run a cell and advance to the next one. Run cells top to bottom, each notebook must be executed in order within a session.
+
+**OpenAI API key:** Set the key before starting JupyterLab, or export it inside a cell:
+
+```bash
+export OPENAI_API_KEY="sk-..."
+jupyter lab
 ```
 
 ---
@@ -322,9 +345,6 @@ A few guidelines depending on what you are changing:
 ### 5. Verify your changes locally
 
 ```bash
-# Run the linter and formatter checks
-pre-commit run --all-files
-
 # Run the test suite
 pytest
 ```
@@ -367,9 +387,6 @@ Address comments by pushing additional commits to the same branch, do not open a
 ## Development Reference
 
 ```bash
-# Run pre-commit hooks manually
-pre-commit run --all-files
-
 # Run tests
 pytest
 
