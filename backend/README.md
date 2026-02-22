@@ -1,4 +1,4 @@
-# Backend — RAG Pipeline
+# Backend RAG Pipeline
 
 This package (`sme_kt_zh_collaboration_rag`) contains the notebooks and the supporting Python modules that run the RAG pipeline for the PrimePack AG sustainability use case.
 
