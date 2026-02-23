@@ -9,6 +9,7 @@ Available functions:
 
 from __future__ import annotations
 
+import pandas as pd  # type: ignore[import-untyped]
 from typing import Any, Sequence
 
 from ragas import EvaluationDataset  # type: ignore[import-untyped]
@@ -127,12 +128,16 @@ def evaluate_with_ragas(
     ragas_result = ragas.evaluate(**kwargs)
     scores_df = ragas_result.to_pandas()  # type: ignore[union-attr]
 
+    # to_pandas() includes input columns (user_input, retrieved_contexts, response) alongside metric score columns. Filter to only the metric columns.
+    metric_names = {m.name for m in metrics}
+    score_columns = [col for col in scores_df.columns if col in metric_names]
+
     metric_results: list[MetricResult] = [
         MetricResult(
             metric_name=col,
-            score=float(scores_df[col].mean()),
-            per_sample_scores=[float(v) for v in scores_df[col].tolist()],
+            score=float(pd.to_numeric(scores_df[col], errors="coerce").mean()),
+            per_sample_scores=[float(v) for v in pd.to_numeric(scores_df[col], errors="coerce").tolist()],
         )
-        for col in scores_df.columns
+        for col in score_columns
     ]
     return EvaluationReport(results=metric_results, num_samples=len(samples))
