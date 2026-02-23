@@ -1,4 +1,5 @@
 from textwrap import dedent
+from typing import Sequence
 
 from conversational_toolkit.llms.base import LLM, LLMMessage, Roles
 from conversational_toolkit.vectorstores.base import ChunkRecord
@@ -89,7 +90,7 @@ async def hyde_expansion(query: str, llm: LLM) -> str:
     return hyde_expansion_message
 
 
-def reciprocal_rank_fusion(search_results: list[list[ChunkRecord]], k: int = 60) -> list[ChunkRecord]:
+def reciprocal_rank_fusion(search_results: Sequence[Sequence[ChunkRecord]], k: int = 60) -> list[ChunkRecord]:
     """
     Applies Reciprocal Rank Fusion (RRF) to a list of search results from different sources.
 

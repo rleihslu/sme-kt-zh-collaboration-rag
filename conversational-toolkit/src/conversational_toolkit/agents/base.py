@@ -12,8 +12,8 @@ from typing import Any, AsyncGenerator, Sequence
 
 from pydantic import BaseModel, Field
 
+from conversational_toolkit.chunking.base import Chunk
 from conversational_toolkit.llms.base import LLM, LLMMessage, Roles
-from conversational_toolkit.vectorstores.base import ChunkRecord
 
 
 class QueryWithContext(BaseModel):
@@ -35,7 +35,7 @@ class AgentAnswer(LLMMessage):
     """
 
     step_by_step_thinking: str = ""
-    sources: Sequence[ChunkRecord] = Field(default_factory=lambda: [])
+    sources: Sequence[Chunk] = Field(default_factory=lambda: [])
     follow_up_questions: Sequence[str] = Field(default_factory=lambda: [])
 
 
