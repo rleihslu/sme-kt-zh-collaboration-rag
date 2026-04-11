@@ -231,8 +231,21 @@ Planned interfaces in addition to the RAG app:
 | **This RAG app** | Knowledge base Q&A with source attribution and document retrieval |
 | **Open WebUI** | General-purpose chat directly against the LLM; supports model selection, system prompts, conversation history |
 | **AnythingLLM** | Alternative with built-in RAG management UI, document upload, and workspace isolation — could complement this app |
+| **big-AGI** | ⚠ Evaluated — not recommended. See note below. |
 
-All three talk to the same vLLM endpoint. Users get two or more entry points depending on what they need, all powered by the same model running on the Spark.
+All three (RAG app, Open WebUI, AnythingLLM) talk to the same vLLM endpoint. Users get two or more entry points depending on what they need, all powered by the same model running on the Spark.
+
+#### big-AGI — evaluated and not recommended
+
+[big-AGI](https://github.com/enricoros/big-agi) is an open-source, MIT-licensed AI workspace with strong UX features: multi-model comparison (Beam), voice, image generation, web search with citations, code execution, and rich chat export. It is actively maintained (6.9k stars, 7.7k commits) and deployable via Docker or Vercel.
+
+However, it has significant gaps for this deployment model:
+
+- **No multi-user isolation or OIDC/SSO.** There is no native authentication, no OIDC/SSO support, and no integration path with AD FS or Entra ID. The only auth options are HTTP Basic Auth (requires a manual build step to enable) or delegating to a cloud platform (Cloudflare Zero Trust, Vercel). No per-user access control or conversation isolation exists — everyone who reaches the URL shares the same unauthenticated surface.
+- **No RAG or document upload.** It cannot replace or supplement the knowledge base Q&A use case.
+- **Custom OpenAI-compatible endpoints are supported.** An admin can pre-configure the vLLM endpoint and API key via environment variables, so end-users do not need to enter their own keys. Pointing it at the Spark's vLLM instance is straightforward. The limitation is not connectivity — it's the absence of any user identity model on top of that connection.
+
+big-AGI could be deployed behind a VPN or Cloudflare Zero Trust as a general-purpose chat surface against the shared vLLM backend — but without per-user conversation isolation or AD FS integration, it is a weaker choice than Open WebUI, which has native OIDC and proper multi-user support. It is a good fit for individual engineers who want a polished personal AI workspace; it is not a fit where user-level access control and conversation isolation are required.
 
 ### Authentication — Local Active Directory
 
